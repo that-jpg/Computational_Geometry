@@ -1,5 +1,10 @@
+import sys
+
 # good enough?
-HUGE_NUMBER = 999999999999
+_huge = sys.float_info.max
+_tiny = sys.float_info.min
+
+_eps = 0.00001
 
 def ray_intersect(segment_begin, segment_end, x, y):
   # We should get to points where the lowest on y should be called A, and the other B
@@ -9,12 +14,14 @@ def ray_intersect(segment_begin, segment_end, x, y):
   else:
     b = segment_begin
     a = segment_end
+
   if y == a[1] or y == b[1]:
     # CAREFUL, we are just adding one to make
     # sure that the point is not some edge
-    y = y + 1
+    y = y + _eps
 
   intersect = False
+
   if (y > b[1] or y < a[1]):
     return False
 
@@ -24,15 +31,15 @@ def ray_intersect(segment_begin, segment_end, x, y):
   if x < min(a[0], b[0]):
     return True
 
-  if a[0] != b[0]:
-    m_red = (b[1] - a[1]) / (b[0] - a[0])
+  if abs(a[0] - b[0]) > _tiny:
+    m_red = (b[1] - a[1]) / float(b[0] - a[0])
   else:
-    m_red = HUGE_NUMBER
-  
-  if a[0] != x:
-    m_blue = (y - a[1]) / (x - a[0]) ;  
+    m_red = _huge
+
+  if abs(a[0] - x) > _tiny:
+    m_blue = (y - a[1]) / float(x - a[0])
   else:
-    m_blue = HUGE_NUMBER
+    m_blue = _huge
 
   return m_blue >= m_red
 
@@ -45,4 +52,4 @@ def contains_ray_casting(polygon, x, y):
     segment_end = polygon[0 if is_begin_last_element else x]
     if (ray_intersect(segment_begin, segment_end, x, y)):
       count = count + 1
-  return count % 2 == 0
+  return count % 2 == 1

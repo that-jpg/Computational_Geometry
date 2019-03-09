@@ -10,9 +10,13 @@ def is_itself_convex_hull(points):
   return len(points) <= 3
 
 def add_point_to_convex_hull(convex_hull, point):
+  print(convex_hull)
   if (len(convex_hull) < 3):
     return convex_hull + [point]
   if (polygon.contains_ray_casting(convex_hull, point[0], point[1])):
+    print("The convex, ")
+    print(convex_hull)
+    print("contains the point <" + str(point[0]) + ", " + str(point[1]) + ">")
     return convex_hull
   else:
     print("TODO: Logic when the point is not within the convex hull")
