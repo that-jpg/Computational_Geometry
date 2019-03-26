@@ -14,16 +14,14 @@ def add_point_to_convex_hull(convex_hull, point):
   if (len(convex_hull) < 3):
     return convex_hull + [point]
   if (polygon.contains_ray_casting(convex_hull, point[0], point[1])):
-    print("The convex, ")
-    print(convex_hull)
-    print("contains the point <" + str(point[0]) + ", " + str(point[1]) + ">")
     return convex_hull
   else:
     print("TODO: Logic when the point is not within the convex hull")
+    return convex_hull
 
    
 
-def incremental_get_convex_hull_points(points):
+def incremental_convex_hull(points):
   if is_itself_convex_hull(points):
     return points
   ## Sort the list getting the right-top-most point
@@ -36,4 +34,14 @@ def incremental_get_convex_hull_points(points):
 
   return convex_hull
 
-print(incremental_get_convex_hull_points(points))
+def gift_wrapping_convex_hull(points):
+  if is_itself_convex_hull(points):
+    return points
+
+  ## Sort the list getting the right-top-most point
+  sorted_points = sort.sort_points_by_x(points)
+
+
+  
+
+print(incremental_convex_hull(points))
