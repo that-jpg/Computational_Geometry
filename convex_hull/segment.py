@@ -1,4 +1,7 @@
 import sys
+from math import acos
+from math import pi
+from math import sqrt
 
 _positive_huge = sys.float_info.max
 _negative_huge = sys.float_info.min
@@ -52,4 +55,18 @@ def intersect(a, b):
     return True
   
   return False
+
+def length(point):
+  # Pythagorical distance
+  return sqrt(point.x**2 + point.y**2)
+
+def dot_product(a, b):
+  return a.x*b.x + a.y*b.y
+
+def determinant(a, b):
+  return (a.x * b.x) - (a.y * b.y)
+
+def inner_angle(a, b):
+  return dot_product(a, b)/(length(a)*length(b))
+
 

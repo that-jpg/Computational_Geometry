@@ -1,23 +1,5 @@
-from math import acos
-from math import sqrt
-from math import pi
 from point import Point
-
-def length(point):
-    # Pythagorical distance
-    return sqrt(point.x**2 + point.y**2)
-
-def dot_product(a, b):
-   # The sum of the products
-   return a.x*b.x + a.y*b.y
-
-
-def determinant(a , b):
-   return (a.x * b.x) - (a.y * b.y)
-
-# the return is in cos of clockwise angle
-def inner_angle(a , b):
-   return dot_product(a , b)/(length(a)*length(b))
+from segment import inner_angle
 
 def points_by_x(points):
   return points.sort(key=lambda point: point.x)
