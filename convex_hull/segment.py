@@ -24,11 +24,7 @@ def tangency(a, b):
 # https://stackoverflow.com/questions/17592800/how-to-find-the-orientation-of-three-points-in-a-two-dimensional-space-given-coo
 # @param - three points
 def orientation(a, b, c): 
-  val = (b.y - a.y) * (c.x - b.x) - (b.x - a.x) * (c.y - b.y); 
-  if (val == 0):
-    return 0 
-  else:
-    return 1 if (val > 0) else 2
+  return ((c.x - a.x) * (b.y - a.y)) - ((b.x - a.x) * (c.y - a.y))
 
 # @param - two segments
 def intersect(a, b):

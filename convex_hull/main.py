@@ -16,7 +16,8 @@ def main():
  
   convex_hull = Convex.gift_wrap(set_of_points)
 
-  print(convex_hull)
+  for i in  range(0, len(convex_hull)):
+    print("Point: (" + str(convex_hull[i].x) + ", " + str(convex_hull[i].y))
 
 if __name__ == '__main__':
   main()  
