@@ -4,6 +4,7 @@ import random
 import sys
 
 from collections import namedtuple  
+from math import atan2
 
 import matplotlib.pyplot as plt  
 import sort as Sort
@@ -27,42 +28,64 @@ class ConvexHull(object):
     def add(self, point):
         self._points.append(point)
 
-    def graham_sort(self): 
-      Sort.points_by_x(self._points)
-      self._points.reverse()
-
-      pivot = self._points[0]
-
-      def slope(point):
-        if ((pivot.x - point.y) == 0): 
-          return 0
-        else:
-          return (pivot.y - point.y) / \
-               (pivot.x - point.y)
-
-      return self._points[:1] + sorted(self._points[1:], key=slope)
-
     def compute_hull(self):
+      pivo = None
+      def polar_angle(p1, p2=None):
+        if (p2 == None): p2 = pivo
+        return atan2((p1.y - p2.y), (p1.x - p2.x))
+   
+      def distance(p1, p2=None):
+        if (p2 == None): p2 = pivo
+        return (p1.x - p2.x)**2 + (p1.y - p2.y)**2
+      
+      def graham_sort(a):
+        if len(a) <= 1: return a
+        smaller, equal, larger = [], [], [] 
+        piv_ang = polar_angle(a[random.randint(0, len(a) - 1)])
+        for pt in a:
+          pt_ang = polar_angle(pt) 
+          if pt_ang < piv_ang: smaller.append(pt)
+          elif pt_ang == piv_ang: equal.append(pt)
+          else: larger.append(pt)
+        return graham_sort(smaller) + \
+               sorted(equal, key=distance) + graham_sort(larger)
+
+      # if the determinant is positive the tree points 
+      # represent a counter-clockwise turn, if negative a clockwise
+      # and colinear if 0 
+      def det(p1, p2, p3):
+        return  (p2.x - p1.x) * (p3.y - p1.y) \
+               -(p2.y - p1.y) * (p3.x - p1.x)
+      
+
       points = self._points
+      min_idx=None
+      for i, (x,y) in enumerate(points):
+        if min_idx == None or y < points[min_idx].y:
+           min_idx = i
+        if y == points[min_idx].y and x < points[min_idx].x:
+           min_idx = i
+        
+      pivo = points[min_idx]
+      sorted_points = graham_sort(points)
+      del sorted_points[sorted_points.index(pivo)]
 
-      # get leftmost point and add to the hull
-      ordered_points = self.graham_sort()
-      i = 0
+      self._hull_points = []
+      self._hull_points.append(pivo)
+      self._hull_points.append(sorted_points[0])
+      print('mermao')
+      print(sorted_points[0])
+      for s in sorted_points[1:]:
+        while det(self._hull_points[-2], self._hull_points[-1], s) <= 0:
+          del self._hull_points[-1]
+          if len(self._hull_points) == 1: break
+        self._hull_points.append(s)
 
-      print("TAMANHO DO ARRAY")
-      print(len(ordered_points))
+        self.display()
 
-      for p in ordered_points:
-        if (i < self._steps):
-          while(len(self._hull_points) > 1 and (
-             Segment.orientation(self._hull_points[-2], self._hull_points[-1], p) >= 0)):
-            self._hull_points.pop()
-          self._hull_points.append(p)
-          self.display()
-      # to close the convex polygon
-      self._hull_points.append(self._hull_points[0])
-
-          
+      self._hull_points = self._hull_points + [self._hull_points[0]]
+      
+ 
     def get_hull_points(self):
         if self._points and not self._hull_points:
             self.compute_hull()
@@ -85,7 +108,7 @@ class ConvexHull(object):
 
 
 def main():
-    NUMBER_OF_POINTS = 5
+    NUMBER_OF_POINTS = 100
     ch = ConvexHull()
     ch.update_steps_count(100)
     for _ in range(NUMBER_OF_POINTS):
