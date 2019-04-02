@@ -93,5 +93,3 @@ def main():
 if __name__ == '__main__':  
     main()
 
-
-# ref: https://startupnextdoor.com/computing-convex-hull-in-python/
