@@ -2,6 +2,7 @@
 import time
 import random
 import sys
+import math
 
 from collections import namedtuple  
 from math import atan2
@@ -66,6 +67,7 @@ class ConvexHull(object):
           del self._hull_points[-1]
           if len(self._hull_points) == 1: break
         self._hull_points.append(s)
+#        self.display()
 
       self._hull_points = self._hull_points + [self._hull_points[0]]
       
@@ -80,7 +82,7 @@ class ConvexHull(object):
         # all points
         x = [p.x for p in self._points]
         y = [p.y for p in self._points]
-        plt.plot(x, y, marker=',', linestyle='None')
+        plt.plot(x, y, marker='D', linestyle='None')
 
         # hull points
         hx = [p.x for p in self._hull_points]
@@ -95,11 +97,26 @@ def main():
     NUMBER_OF_POINTS = 50000
     ch = ConvexHull()
     for _ in range(NUMBER_OF_POINTS):
-      ch.add(Point(random.randint(-1000, 1000), random.randint(-1000, 100)))
+      # radius of the circle
+      circle_r = 1000
+      # center of the circle (x, y)
+      circle_x = 0
+      circle_y = 0
+
+      # random angle
+      alpha = 2 * math.pi * random.random()
+      # random radius
+      r = circle_r * math.sqrt(random.random())
+      # calculating coordinates
+      x = r * math.cos(alpha) + circle_x
+      y = r * math.sin(alpha) + circle_y
+      ch.add(Point(x, y))
 
     # start timer
     start = time.time()
     print("Points on hull:", ch.get_hull_points())
+    print("Points on hull:", len(ch.get_hull_points()))
+
 
     # end timer
     end = time.time()
